@@ -15,9 +15,10 @@ int wake;
 boolean interruptReceived = false;
 bool smartconfigDone = false;
 
-int red = 15;
+int red = 0;
 int green = 2;
-int blue = 0;
+int blue = 15;
+ 
 
 // #define PMS_SET_PIN 26U
 // #define PMS_RST_PIN 25U
@@ -191,7 +192,7 @@ void setup()
         USE_SERIAL.print("[HTTP] begin...\n");
 
         
-        String url = "http://yourwebsite.com/updateWIFI.php?pms01=";
+        String url = "http://YOURSERVER.com/updateWIFI.php?pms01=";
 
         url += PM01Value;
         url += "&pms25=";
@@ -202,7 +203,12 @@ void setup()
         url += "&serial=";
         url += clientMac;
 
-
+        url += "&temperature=";
+        url += temperature;
+        url += "&pressure=";
+        url += pressure;
+        url += "&humidity=";
+        url += humidity;
         
         USE_SERIAL.print("URL is ...\n");
         USE_SERIAL.print(url);
