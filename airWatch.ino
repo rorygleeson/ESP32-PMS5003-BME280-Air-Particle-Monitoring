@@ -1,8 +1,13 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-#define USE_SERIAL Serial
 #include <esp_system.h>
+
+#include <Adafruit_BME280.h>
+Adafruit_BME280 bme280;
+
+
+#define USE_SERIAL Serial
 #define uS_TO_S_FACTOR 1000000 
 
 int attemptsCount = 0;
@@ -66,6 +71,8 @@ void setup()
     
     digitalWrite(red, LOW); // Red LED on
     
+    Serial.println(F("Start the BME280 ...."));
+    bme280.begin();
     
     int counter = 0;
     
@@ -107,6 +114,28 @@ void setup()
       Serial.println("WiFi Connected.");
       Serial.print("IP Address: ");
       Serial.println(WiFi.localIP());
+
+        
+
+        Serial.println("Read BME280 values in 2 seconds.");
+        delay(2000);
+        float temperature = bme280.readTemperature();
+        float pressure = bme280.readPressure() / 100.0F;
+        float humidity = bme280.readHumidity();
+        delay(2000);
+        Serial.println("Temp is : ");
+        Serial.println(temperature);
+        Serial.println("Pressure is : ");
+        Serial.println(pressure);        
+        Serial.println("Humidity is : ");
+        Serial.println(humidity);
+        
+       
+                 
+        delay(1000);
+
+
+
 
       Serial.println("Set PMS SET Pin HIGH and wait 20 seconds ......");
       digitalWrite(pmsSetPin, HIGH);
@@ -162,7 +191,7 @@ void setup()
         USE_SERIAL.print("[HTTP] begin...\n");
 
         
-        String url = "http://yourserver.com/updateWIFI.php?pms01=";     // your server, a script in this case a php one, receives this message. 
+        String url = "http://yourwebsite.com/updateWIFI.php?pms01=";
 
         url += PM01Value;
         url += "&pms25=";
